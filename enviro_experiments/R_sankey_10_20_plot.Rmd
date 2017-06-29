@@ -1,0 +1,51 @@
+---
+title: "sankey plot for 10 to 20 topics (textacy)"
+output: html_notebook
+---
+sort out directory for relative filepaths
+```{r}
+getwd()
+#install.packages("rCharts")
+library(networkD3)
+library(devtools)
+#install_github('rCharts', 'ramnathv')
+library(rCharts)
+#install.packages('magrittr')
+library(magrittr)
+#install.packages('dplyr')
+library(dplyr)
+
+```
+read in data which was prepared in python
+```{r}
+
+sankey_data <- read.csv("./sankey_data_10_20.csv", header = TRUE)
+sankey_data  <- rename(sankey_data ,  source = topic_id_10top,  target = topic_id_20top)
+sankey_data$source2 <- paste0("10 topics_", (sankey_data$topic_id_10top + 1))
+sankey_data$target2 <- paste0("20 topics_", (sankey_data$topic_id_20top + 1))
+
+nodes <- 
+
+sequence <- data.frame(seq(0, 29, by = 1))
+sequence$node_id <- paste0("topic_", sequence$seq.0..29..by...1.)
+names(sequence)
+```
+
+```{r}
+URL <- paste0("https://cdn.rawgit.com/christophergandrud/networkD3/",
+              "master/JSONdata/energy.json")
+Energy <- jsonlite::fromJSON(URL)
+nodes_eg <- (Energy$nodes)
+links_eg <- (Energy$links)
+```
+
+Exploring plots of relationships between topics
+
+```{r}
+
+sankeyNetwork(Links = sankey_data, Nodes = sequence, Source = "source",
+             Target = "target2", Value = "value", fontSize = 12, NodeID = "node_id", nodeWidth = 30) %>%
+saveNetwork(file = 'SankeyPlot_10_20topics.html')
+```
+
+NOte that the topics in the 10 topic model are named 0-9 and in the 20 topic model are named 10-29
