@@ -1,0 +1,36 @@
+---
+title: "Hierarchy, method 2: dendrogram structure"
+output: html_notebook
+---
+
+
+Load packages 
+
+```{r}
+#install.packages("tidyverse")
+library(tidyverse)
+getwd()
+```
+
+iMport data
+```{r}
+compare_methods <- as.data.frame(read_csv("sankey_data_compare_methods.csv"))
+```
+
+final data prep (most already done in python)
+```{r}
+compare_methods$target = compare_methods$target + 20
+sequence <- data.frame(node = seq(0, 39, by = 1))
+sequence$node_id <- c(paste0("freestyle", seq(1, 20, by = 1)), paste0("dendro", seq(1, 20, by = 1)))
+```
+
+now plot
+```{r}
+sankeyNetwork(Links = compare_methods, Nodes = sequence, Source = "source",
+             Target = "target", Value = "value", fontSize = 12, NodeID = "node_id", nodeWidth = 30) %>% 
+
+saveNetwork(file = 'SankeyPlot_compare_hierarchymethods.html')
+```
+%>% 
+
+saveNetwork(file = 'SankeyPlot_compare_hierarchymethods.html')
