@@ -3,6 +3,7 @@ import json
 import urllib2
 import urlparse
 
+
 def load_links():
     with open('input/early-years-audit-all-content.csv', 'r') as f:
         reader = csv.reader(f)
