@@ -36,7 +36,7 @@ def read_urls(fname):
             # format string by replacing tabs, new lines and commas
             txt = txt.strip().replace("\t", " ").replace("\r", " ").replace('\n', ' ').replace(',', ' ')
             # remove remaining excess whitespace
-            txt = " ".join(txt.split())
+            txt = " ".join(txt.encode('utf-8').split())
             urltext.append(UrlData(url[0],txt))
     return(urltext)
 
