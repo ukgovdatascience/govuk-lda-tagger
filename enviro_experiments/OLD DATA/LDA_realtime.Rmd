@@ -1,0 +1,28 @@
+---
+title: "exploring time taken for LDA experiments"
+output: html_notebook
+---
+```{r}
+getwd()
+```
+
+```{r}
+df <- data.frame(numtop = c(20, 40, 5, 5, 10, 5, 10, 20), 
+                 numpasses = as.factor(c(25, 50, 10, 5, 25, 25, 25, 25)),
+                 token = c("textacy", "textacy", "textacy", "textacy", "textacy", "phrasemachine", "phrasemachine",  "phrasemachine"), 
+                 real = c(1452, NaN, 114, 109, 189, 506, 417, 462)
+                 )
+```
+
+try and plot y axis = real
+x axis = numtop
+shape = token 
+colour = numpasses
+
+```{r}
+library(tidyverse)
+plot <- ggplot(df, aes(x=numtop, y=real, shape=numpasses, color = token, size = 3)) + geom_point() + labs(x = "Number of topics", y = "Clock time taken (real)")
+
+ggsave(filename="LDA_realtime.png", plot=plot)
+```
+
