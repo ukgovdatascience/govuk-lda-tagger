@@ -9,6 +9,7 @@ from gensim.parsing.preprocessing import STOPWORDS
 from nltk.corpus import stopwords
 from collections import Counter
 import sys
+from itertools import ifilter
 
 """
 This module/script takes a list of (url, text) in csv form, and produces a list of bigrams
@@ -37,20 +38,24 @@ def make_bigrams(fname):
             tokens = lemmatize(raw_text, stopwords=STOPWORDS)
             sentences.append(tokens)
             bigram.add_vocab([tokens])
-    # print dir(bigram.vocab)  
-    return(bigram)
+        # Remove single words 
+        
+        outbigrams = []
+        for key in bigram.vocab.keys():
+             if len(key.split("_")) > 1:
+                   outbigrams.append(key)
+    return(outbigrams)
 
 def bigrams_to_file(oname):
     """Function that writes data structure to (a .csv) file."""
     f = open(oname,'w')
-    f.write('bigram\n')
-    for row in bigram.vocab:
+    for ngram in outbigrams:
         # print row
-        f.write(row+'\n')
+        f.write(ngram+'\n')
     f.close()
     return(0)
 
 # executes only if run as a script and passed two arguments (input fileneame and output filename)
 if __name__ == "__main__":
-    bigram = make_bigrams(sys.argv[1])
+    outbigrams = make_bigrams(sys.argv[1])
     bigrams_to_file(sys.argv[2])
