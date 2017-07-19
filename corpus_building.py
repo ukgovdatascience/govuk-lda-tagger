@@ -65,7 +65,9 @@ class CorpusReader(object):
         self.no_above = no_above
         self.keep_n = keep_n
 
-        with open('input/environment_bigrams.csv', 'r') as f:
+
+        with open('input/bigrams.csv', 'r') as f:
+
             reader = csv.reader(f)
             self.top_bigrams = [bigram[0] for bigram in list(reader)]
 

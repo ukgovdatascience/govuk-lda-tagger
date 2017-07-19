@@ -9,6 +9,7 @@ from gensim.parsing.preprocessing import STOPWORDS
 from nltk.corpus import stopwords
 from collections import Counter
 import sys
+
 from itertools import ifilter
 
 """
@@ -38,6 +39,7 @@ def make_bigrams(fname):
             tokens = lemmatize(raw_text, stopwords=STOPWORDS)
             sentences.append(tokens)
             bigram.add_vocab([tokens])
+
         # Remove single words 
         
         outbigrams = []
@@ -46,16 +48,22 @@ def make_bigrams(fname):
                    outbigrams.append(key)
     return(outbigrams)
 
+
 def bigrams_to_file(oname):
     """Function that writes data structure to (a .csv) file."""
     f = open(oname,'w')
+
     for ngram in outbigrams:
         # print row
         f.write(ngram+'\n')
+
     f.close()
     return(0)
 
 # executes only if run as a script and passed two arguments (input fileneame and output filename)
 if __name__ == "__main__":
+
     outbigrams = make_bigrams(sys.argv[1])
+
+
     bigrams_to_file(sys.argv[2])
