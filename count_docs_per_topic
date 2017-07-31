@@ -1,0 +1,85 @@
+import csv
+import pandas as pd
+import re #regular expression
+import click
+import argparse
+
+"""
+This module/script takes the tagged url output from train_LDA with 5 topics, splits it into 5 groups and merges each group with original data to produce separate url, text.csvs ready to run LDA on
+
+Example usage:
+python split5topics_to_url_for_lda.py --preLDA_fpath input/test_urltext.csv --tagged_fpath input/test_tags.csv
+"""  
+__author__ = "Ellie King"
+__copyright__ = "Government Digital Service, 10/07/2017"
+
+parser = argparse.ArgumentParser(description=__doc__)
+
+parser.add_argument(
+    '--fpath', dest='filepath', metavar='FILENAME', default=None,
+    help='import tags data in csv'
+)
+
+def read_data(fpath):
+    """Function to read in original data and tagged documents after LDA with 5 topics"""
+    df_tag5 = pd.read_csv(fpath, header=None, names=list('abcdefgh'))
+    numrows = df_tag5.shape[0]
+    return(df_tag5, numrows)
+
+def clean_tagged_urls(df_tag5):
+    """function to clean the dataframe to result in url 
+    topic_id cols"""
+    #drop the leading parentheses
+    df_tag5['b'] = df_tag5['b'].str.replace(r'\[\(', '')
+    df_tag5['d'] = df_tag5['d'].str.replace(r'\(', '')
+    df_tag5['f'] = df_tag5['f'].str.replace(r'\(', '') 
+    df_tag5['c'] = df_tag5['c'].str.replace(r'\)', '')
+    df_tag5['e'] = df_tag5['e'].str.replace(r'\)', '')
+    df_tag5['g'] = df_tag5['g'].str.replace(r'\)\]', '')
+    print(df_tag5.head(5))
+    df_tag5['c'] = df_tag5['c'].astype(float,raise_on_error=False)
+    #df_tag5[['e','g']] = df_tag5[['e','g']].apply(pd.to_numeric)
+    df_tag5.round(2)
+    print(df_tag5.dtypes)
+    # drop the columns containing topics of lower (or equal probability)
+    df2_tag5 =  df_tag5.drop(df_tag5.columns[[ 7]], axis=1)
+    #df2_tag5 =  df_tag5.drop(df_tag5.columns[[2, 3, 4, 5, 6, 7]], axis=1)
+    # name the remaining two columns
+    df2_tag5.columns = ['url', 'topic_id1', 'p1', 'top2', 'p2', 'top3', 'p3']
+    print(df2_tag5.head(5))
+    return(df2_tag5)
+
+def count_urls_by_topic(df_tag5_clean):
+    #split dataframe into 5 separate dfs filtered on topic_id
+    print("Number of documents with the most probable topic")
+    print(df_tag5_clean.groupby('topic_id1').count()['url'])
+    print("Number of documents with the second most probable topic")
+    print(df_tag5_clean.groupby('top2').count()['url'])
+    print("Number of documents with the third most probable topic")
+    print(df_tag5_clean.groupby('top3').count()['url'])
+    
+
+
+if __name__ == '__main__':
+    args = parser.parse_args()
+
+    print("Loading input file {}".format(args.filepath))
+    df_tag5, numrows = read_data(
+        fpath = args.filepath, 
+        )
+
+    print("Head of tagged file")
+    print(df_tag5.head(10))
+    print("Number of urls %d" % numrows)
+
+    print("Cleaning tags")
+    df_tag5_clean = clean_tagged_urls(df_tag5)
+
+    print("Counts")
+    print(count_urls_by_topic(df_tag5_clean))
+
+
+   
+
+ 
+
