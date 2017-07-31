@@ -8,7 +8,7 @@ import argparse
 This module/script takes the tagged url output from train_LDA with 5 topics, splits it into 5 groups and merges each group with original data to produce separate url, text.csvs ready to run LDA on
 
 Example usage:
-python create_bigrams.py input/test_urltext.csv input/test_bigrams.csv
+python split5topics_to_url_for_lda.py --preLDA_fpath input/test_urltext.csv --tagged_fpath input/test_tags.csv
 """  
 __author__ = "Ellie King"
 __copyright__ = "Government Digital Service, 10/07/2017"
