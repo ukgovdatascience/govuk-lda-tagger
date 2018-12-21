@@ -1,12 +1,12 @@
-pandas==0.18.1
+pandas==0.23.4
 nltk==3.2.1
-numpy==1.11.2
+numpy==1.15.2
 lda==1.0.4
 stop_words
 gensim==0.13.1
 Pattern==2.6
 ipdb==0.10.1
-Scrapy==1.2.1
+Scrapy==1.5.1
 html2text==2016.9.19
 pdfminer==20140328
 requests_cache
